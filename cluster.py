@@ -77,7 +77,7 @@ class Consumer(Thread):
             # print(f"{self.name} esta Popping del queue: {item}") # debugging message
 
             if item == None: # conditional to jump out of critical region if what was popped is None, indicates no more processes
-                print(f"No more processes in the queue, {self.name} ending") # debbuging message
+                # print(f"No more processes in the queue, {self.name} ending") # debbuging message
                 self.lock.release() 
                 self.empty.release() # signals the Producer thread that there is an empty space where a new item can be added
                 break
