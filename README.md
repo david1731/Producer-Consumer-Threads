@@ -59,6 +59,6 @@ This Assignment contains two executable files:
         Consumer 2 consumió 8 del tiempo del CPU
 
 ## Resources used
-    -   StackOverflow
+    -   Stack Overflow
     -   Socket Programming in Python (https://realpython.com/python-sockets/)
     -   An Intro to Threading in Python (https://realpython.com/intro-to-python-threading/)
