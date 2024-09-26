@@ -57,3 +57,8 @@ This Assignment contains two executable files:
         Todos los procesos se ejecutaron.
         Consumer 1 consumió 7 del tiempo del CPU
         Consumer 2 consumió 8 del tiempo del CPU
+
+## Resources used
+    -   StackOverflow
+    -   Socket Programming in Python (https://realpython.com/python-sockets/)
+    -   An Intro to Threading in Python (https://realpython.com/intro-to-python-threading/)
