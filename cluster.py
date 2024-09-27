@@ -58,16 +58,16 @@ class Producer(Thread):
             self.full.release()
 
 class Consumer(Thread):
-    def __init__(self, name, queue, lock, full, empty,consumer_time):
+    def __init__(self, name, queue, lock, full, empty):
         Thread.__init__(self)
         self.name = name # Consumer's name
         self.process_queue = queue # shared queue
         self.lock = lock # global lock
         self.full = full # semaphore
         self.empty = empty # semaphore
-        self.consumer_time = consumer_time # hashmap to keep track of the time consumed by each Consumer thread
         
     def run(self):
+        consumed_time = 0
         while True:
             # critical region
             self.full.acquire() # one less occupied slot in the queue
@@ -83,10 +83,11 @@ class Consumer(Thread):
                 break
 
             print(f"{self.name}: esta ejecutando proceso de tiempo: {item}") # debugging message
-            self.consumer_time[self.name] += item # keep track of the total time the current consumer consumed from the cpu
             self.lock.release()
             self.empty.release() # signals the Producer thread that there is an empty space where a new item can be added
             time.sleep(item) # simulates executing the process
+            consumed_time += item
+        print(f"{self.name} consumió {consumed_time} del CPU")
         # print(f"{self.name} sali") # indicator that the thread finished
 
 def main():
@@ -96,7 +97,6 @@ def main():
     lock = threading.Lock() # lock 
     full = threading.Semaphore(0)  # No slots occupied
     empty = threading.Semaphore(N)  # N empty slots
-    consumer_time = {"Consumer 1": 0, "Consumer 2": 0}
 
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind(('127.0.0.1', port))  # Only accepts connections from the local machine
@@ -109,8 +109,8 @@ def main():
 
     # initialize Producer and Consumer Threads
     producer = Producer(client, process_queue, lock, full, empty)
-    consumer1 = Consumer("Consumer 1", process_queue, lock, full, empty, consumer_time)
-    consumer2 = Consumer("Consumer 2", process_queue, lock, full, empty, consumer_time)
+    consumer1 = Consumer("Consumer 1", process_queue, lock, full, empty)
+    consumer2 = Consumer("Consumer 2", process_queue, lock, full, empty)
         
 
     # Start producer and consumer threads
@@ -124,15 +124,6 @@ def main():
     consumer2.join()
 
     client.close() # close connection
-
-    # termination messages
-    print("Conexión cerrada")
-    print("Todos los procesos se ejecutaron.") 
-
-    # display the total time consumed of every consumer
-    consumers = 2
-    for i in range(consumers):
-        print(f"Consumer {i+1} consumió {consumer_time[f'Consumer {i+1}']} del tiempo del CPU")
 
 if __name__ == "__main__":
     main()
