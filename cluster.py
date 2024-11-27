@@ -70,6 +70,7 @@ class Consumer(Thread):
         consumed_time = 0
         while True:
             # critical region
+            
             self.full.acquire() # one less occupied slot in the queue
             self.lock.acquire() # ensure only one thread at a time can modify the queue 
 
